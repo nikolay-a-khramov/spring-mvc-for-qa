@@ -59,9 +59,9 @@ public class AccountController {
     public ResponseEntity<String> deleteAccount(@PathVariable @PositiveOrZero(message = "Id must be positive!") long id) {
         try {
             accounts.deleteById(id);
-            return new ResponseEntity<>("Deleted successfully: " + id, HttpStatus.OK);
         } catch (EmptyResultDataAccessException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found id: " + id);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found id: " + id, e);
         }
+        return new ResponseEntity<>("Deleted successfully: " + id, HttpStatus.OK);
     }
 }

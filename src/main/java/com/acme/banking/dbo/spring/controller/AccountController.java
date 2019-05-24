@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.Collection;
 
@@ -62,6 +64,18 @@ public class AccountController {
             return new ResponseEntity<>("Deleted successfully: " + id, HttpStatus.OK);
         } catch (EmptyResultDataAccessException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found id: " + id, e);
+        }
+    }
+
+    @PostMapping(path = "/accounts", headers = "X-API-VERSION=1")
+    public ResponseEntity<Account> createAccount(@RequestBody @Valid Account account) {
+        try {
+            accounts.save(account);
+            return new ResponseEntity<>(account, HttpStatus.CREATED);
+        } catch (DataAccessException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to persist entry: ", e);
+        } catch (Exception e ) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong: ", e);
         }
     }
 }

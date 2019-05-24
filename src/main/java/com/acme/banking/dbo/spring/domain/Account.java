@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 
 @ApiModel(subTypes = {SavingAccount.class, CheckingAccount.class})
@@ -19,7 +20,7 @@ import javax.validation.constraints.Size;
 })
 public abstract class Account {
     /** TODO Validation Framework */
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) private long id;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @PositiveOrZero private long id;
     @Email @Size(max = 50) private String email;
     private double amount;
 
